@@ -19,25 +19,51 @@ async def on_ready():
 @bot.event
 async def on_guild_join(guild):
 
-    print('joined {}'.format(guild.name))
+    #outputting any new server joins
+    print(f'joined {guild.name}: {guild.id}')
+    
+    #init variables
     channel_name = "polibot-moderation"
+    role_name = "polibot-moderation"
+    roleID = 0
 
+    #creating moderation variable for members that will be able to see the chat
+    existing_role = discord.utils.get(guild.roles, name=role_name)
+    if existing_role:
+        print(f'{existing_role} role already exists in server {guild.name}')
+        roleID = existing_role.id
+    else:
+        new_role = await guild.create_role(name=role_name)
+        print(f"The role '{role_name}' has been created with the ID: {new_role.id} in server {guild.name}")
+        roleID = new_role.id
+
+    #creating moderation channel, allowing the bot and the moderation role created above able to read it
     channel = discord.utils.get(guild.channels, name=channel_name)
     if channel:
         await channel.send('channel is already created')
         print('channel is alredy created')
     else:
-        print('creating channel')
-        poliswag_mod = await guild.create_text_channel(channel_name)
+        print(f'creating channel for {guild.name}')
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            guild.me: discord.PermissionOverwrite(read_messages=True),
+            guild.get_role(roleID): discord.PermissionOverwrite(read_messages=True),
+        }
+        poliswag_mod = await guild.create_text_channel(channel_name, overwrites=overwrites)
+        print(f'moderation channel sucessfully created for {guild.name}')
         await poliswag_mod.send('channel created :sunglasses: and is a private channel')
 
 @bot.event
 async def on_member_update(before, after):
+    guild = after.guild
+    channel = discord.utils.get(guild.channels, name="polibot-moderation")
     if before.name != after.name:
+        await channel.send(f"```Username changed:\n{before.name} -> {after.name}```")
         print(f"Username changed: {before.name} -> {after.name}")
 
     if before.nick != after.nick:
-        print(f"Nickname changed: {before.nick} -> {after.nick}")
+        await channel.send(f"```User {after.name} changed nickname:\n{before.nick} -> {after.nick}```")
+        print(f"User {after.name} changed nickname: {before.nick} -> {after.nick}")
 
 @bot.event
 async def on_member_remove(member):

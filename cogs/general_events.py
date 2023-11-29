@@ -1,5 +1,8 @@
 import discord
 from discord.ext import commands
+import datetime
+
+CHANNEL_NAME = "polibot-moderation"
 
 class GeneralEvents(commands.Cog):
     def __init__(self, bot):
@@ -40,6 +43,25 @@ class GeneralEvents(commands.Cog):
             poliswag_mod = await guild.create_text_channel(channel_name, overwrites=overwrites)
             print(f'moderation channel sucessfully created for {guild.name}')
             await poliswag_mod.send(f'channel created :sunglasses: and is a private channel for {role_name}s')
+
+    @commands.Cog.listener()
+    async def on_audit_log_entry_create(self, entry):
+        timeLog = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        print('there is an audit log entry, something is happening')
+        currGuild = entry.guild
+        channel = discord.utils.get(currGuild.channels, name=CHANNEL_NAME)
+        if entry.action == discord.AuditLogAction.member_role_update:
+            #await channel.send("A MEMBER'S ROLE HAS BEEN UPDATED; TBD\n" + str(entry.before.roles) + "->" + str(entry.after.roles) + "\n" + str(type(entry.after.roles)))
+            user = entry.target
+            roles_before = entry.before.roles
+            roles_after = entry.after.roles
+
+            if roles_after:
+                for r in roles_after:
+                    await channel.send(f'***{timeLog}***: {user} has new role ***ADDED***: {r}')
+            elif roles_before:
+                for r in roles_before:
+                    await channel.send(f'***{timeLog}***: {user} has new role ***REMOVED***: {r}')
 
 
     @commands.command()

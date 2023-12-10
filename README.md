@@ -14,3 +14,6 @@ install python mysql connector
 
 things to do:
     on server join, bot creates a private channel for server activity log ()
+
+    starting bot
+        py bot.py

@@ -146,7 +146,14 @@ class GeneralEvents(commands.Cog):
 
         #await channel.send(f'Something was updated in the server: {entry.action}')
 
- 
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        if not before.channel:
+            print(f'{member} has joined vc {after.channel}')
+        elif not after.channel:
+            print(f'{member} has left vc {before.channel}')
+        else:
+            print(f'{member} has swapped vc channels: {before.channel} -> {after.channel}')
         
 
 

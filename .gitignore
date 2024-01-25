@@ -1,1 +1,10 @@
 config.py
+
+
+#pycache
+__pycache__/
+cogs/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+

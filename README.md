@@ -10,7 +10,7 @@ pip install discord library
 install mysql onto system: https://dev.mysql.com/downloads/file/?id=518834
 install python mysql connector
     pip install mysql-connector-python
-
+pip install pytz
 
 things to do:
     on server join, bot creates a private channel for server activity log ()

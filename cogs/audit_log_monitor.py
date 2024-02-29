@@ -38,23 +38,37 @@ def memberUpdate(entry, timelog):
     for r in entry.before:
         if r[0] == 'mute':
             if entry.after.mute:
-                return str(f'{entry.user} has muted {entry.target}')
+                activityStr = str(f'{entry.user} has muted {entry.target}')
+                print(activityStr)
+                return activityStr
             else:
-                return str(f'{entry.user} has unmuted {entry.target}')
+                activityStr = str(f'{entry.user} has unmuted {entry.target}')
+                print(activityStr)
+                return activityStr
         elif r[0] == 'deaf':
             if entry.after.deaf:
-                return str(f'{entry.user} has deafened {entry.target}')
+                activityStr = str(f'{entry.user} has deafened {entry.target}')
+                print(activityStr)
+                return activityStr
             else:
-                return str(f'{entry.user} has undeafened {entry.target}')
+                activityStr = str(f'{entry.user} has undeafened {entry.target}')
+                print(activityStr)
+                return activityStr
         elif r[0] == 'timed_out_until':
             format = "%m-%d-%Y %H:%M:%S"
             now_cst = entry.before.timed_out_until.astimezone(timezone('America/Chicago'))
-            return str(f'{entry.user} has timed out {entry.target} until {now_cst.strftime(format)}')
+            activityStr = str(f'{entry.user} has timed out {entry.target} until {now_cst.strftime(format)}')
+            print(activityStr)
+            return activityStr
         elif r[0] == 'nick':
             if entry.user != entry.target:
-                return str(f'{entry.user} has changed the nickname of {entry.target}: {entry.before.nick} -> {entry.after.nick}')
+                activityStr = str(f'{entry.user} has changed the nickname of {entry.target}: {entry.before.nick} -> {entry.after.nick}')
+                print(str(f'{entry.user} has changed the nickname of {entry.target}: {entry.before.nick} -> {entry.after.nick}'))
+                return activityStr
             else:
-                return str(f'{entry.target} has changed their nickname: {entry.before.nick} -> {entry.after.nick}')
+                activityStr = str(f'{entry.target} has changed their nickname: {entry.before.nick} -> {entry.after.nick}')
+                print(activityStr)
+                return activityStr
 
 def memberRoleUpdate(entry, timeLog):
     user = entry.target
@@ -63,16 +77,24 @@ def memberRoleUpdate(entry, timeLog):
 
     if roles_after:
         for r in roles_after:
-            return str(f'***{timeLog}***: {user} has new role ***ADDED***: {r}')
+            activityStr = str(f'***{timeLog}***: {user} has new role ***ADDED***: {r}')
+            print(activityStr)
+            return activityStr
     elif roles_before:
         for r in roles_before:
-            return str(f'***{timeLog}***: {user} has new role ***REMOVED***: {r}')
+            activityStr = str(f'***{timeLog}***: {user} has new role ***REMOVED***: {r}')
+            print(activityStr)
+            return activityStr
 
 def member_move(entry, timeLog):
-    return str(f'{entry.user} has moved a user to a different vc')
+    activityStr = str(f'{entry.user} has moved a user to a different vc')
+    print(activityStr)
+    return activityStr
 
 def member_disconnect(entry, timeLog):
-    return str(f'{entry.user} has disconnected a user')
+    activityStr = str(f'{entry.user} has disconnected a user')
+    print(activityStr)
+    return activityStr
 
 class AuditLogMonitor(commands.Cog):
     def __init__(self, bot):
